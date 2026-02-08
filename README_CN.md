@@ -18,7 +18,17 @@
 
 选择以下任一方法安装 SkillsMP Searcher：
 
-### 方法1：从发布文件安装（推荐）
+### 方法1：NPX 快速安装 ⚡（推荐）
+
+最快的安装方式，直接从 GitHub 安装：
+
+```bash
+npx skills add gccszs/skillsmp-searcher
+```
+
+这将自动下载并安装最新版本的技能。
+
+### 方法2：从发布文件安装
 
 1. 从[发布页面](https://github.com/gccszs/skillsmp-searcher/releases)下载最新的 `skillsmp-searcher.skill`
 2. 使用 Claude Code CLI 安装：
@@ -26,7 +36,7 @@
    claude skill install skillsmp-searcher.skill
    ```
 
-### 方法2：从 GitHub 安装
+### 方法3：从 GitHub 安装
 
 ```bash
 # 克隆仓库
@@ -36,14 +46,14 @@ git clone https://github.com/gccszs/skillsmp-searcher.git
 claude skill install skillsmp-searcher/skills/skillsmp-searcher
 ```
 
-### 方法3：一行命令安装（PowerShell）
+### 方法4：一行命令安装（PowerShell）
 
 ```powershell
 # 下载并安装，一条命令完成
 Invoke-WebRequest -Uri "https://github.com/gccszs/skillsmp-searcher/releases/latest/download/skillsmp-searcher.skill" -OutFile "skillsmp-searcher.skill"; claude skill install skillsmp-searcher.skill
 ```
 
-### 方法4：一行命令安装（Bash）
+### 方法5：一行命令安装（Bash）
 
 ```bash
 # 下载并安装，一条命令完成

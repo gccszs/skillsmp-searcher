@@ -18,7 +18,17 @@
 
 Choose one of the following methods to install SkillsMP Searcher:
 
-### Method 1: Install from Release File (Recommended)
+### Method 1: NPX Quick Install ⚡ (Recommended)
+
+The fastest way to install directly from GitHub:
+
+```bash
+npx skills add gccszs/skillsmp-searcher
+```
+
+This will automatically download and install the latest version of the skill.
+
+### Method 2: Install from Release File
 
 1. Download the latest `skillsmp-searcher.skill` from [Releases](https://github.com/gccszs/skillsmp-searcher/releases)
 2. Install using Claude Code CLI:
@@ -26,7 +36,7 @@ Choose one of the following methods to install SkillsMP Searcher:
    claude skill install skillsmp-searcher.skill
    ```
 
-### Method 2: Install from GitHub
+### Method 3: Install from GitHub
 
 ```bash
 # Clone the repository
@@ -36,14 +46,14 @@ git clone https://github.com/gccszs/skillsmp-searcher.git
 claude skill install skillsmp-searcher/skills/skillsmp-searcher
 ```
 
-### Method 3: One-Line Install (PowerShell)
+### Method 4: One-Line Install (PowerShell)
 
 ```powershell
 # Download and install in one command
 Invoke-WebRequest -Uri "https://github.com/gccszs/skillsmp-searcher/releases/latest/download/skillsmp-searcher.skill" -OutFile "skillsmp-searcher.skill"; claude skill install skillsmp-searcher.skill
 ```
 
-### Method 4: One-Line Install (Bash)
+### Method 5: One-Line Install (Bash)
 
 ```bash
 # Download and install in one command
