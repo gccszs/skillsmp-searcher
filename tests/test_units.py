@@ -267,3 +267,114 @@ class TestIntegration:
         call_args = mock_get.call_args
         headers = call_args[1]["headers"]
         assert "Bearer env_key_123" in headers["Authorization"]
+
+
+class TestSkillUpdateChecker:
+    """Test skill update checking functionality"""
+
+    def test_extract_skill_name_from_md(self, tmp_path):
+        """Test extracting skill name from SKILL.md"""
+        import check_updates
+
+        # Create a test SKILL.md file
+        skill_md = tmp_path / "SKILL.md"
+        skill_md.write_text(
+            "---\nname: test-skill\nauthor: Test Author\n---\n\n# Test Skill\n"
+        )
+
+        name = check_updates.get_skill_name_from_md(skill_md)
+        assert name == "test-skill"
+
+    def test_extract_skill_name_no_frontmatter(self, tmp_path):
+        """Test handling SKILL.md without frontmatter"""
+        import check_updates
+
+        skill_md = tmp_path / "SKILL.md"
+        skill_md.write_text("# Test Skill\n\nNo frontmatter here")
+
+        name = check_updates.get_skill_name_from_md(skill_md)
+        assert name is None
+
+    @patch("check_updates.make_api_request")
+    def test_search_skill_on_skillsmp_success(self, mock_get):
+        """Test successful skill search on SkillsMP"""
+        import check_updates
+
+        mock_response = {
+            "success": True,
+            "data": {
+                "skills": [
+                    {
+                        "id": "test-skill-1",
+                        "name": "test-skill",
+                        "author": "Test Author",
+                        "description": "A test skill",
+                        "githubUrl": "https://github.com/test/skill",
+                        "skillUrl": "https://skillsmp.com/skills/test-skill",
+                        "stars": 100,
+                        "updatedAt": 1704067200,  # 2024-01-01
+                    }
+                ]
+            },
+        }
+        mock_get.return_value = mock_response
+
+        result = check_updates.search_skill_on_skillsmp("test-skill")
+
+        assert result is not None
+        assert result["name"] == "test-skill"
+        assert result["updatedAt"] == 1704067200
+
+    @patch("check_updates.make_api_request")
+    def test_search_skill_on_skillsmp_not_found(self, mock_get):
+        """Test skill search when skill not found"""
+        import check_updates
+
+        mock_response = {"success": True, "data": {"skills": []}}
+        mock_get.return_value = mock_response
+
+        result = check_updates.search_skill_on_skillsmp("nonexistent-skill")
+
+        assert result is None
+
+    def test_format_timestamp(self):
+        """Test timestamp formatting"""
+        import check_updates
+
+        # Unix timestamp for 2024-01-01 00:00:00 UTC
+        timestamp = 1704067200
+        formatted = check_updates.format_timestamp(timestamp)
+
+        assert formatted == "2024-01-01"
+
+    @patch("check_updates.search_skill_on_skillsmp")
+    def test_check_skill_updates_with_update(self, mock_search, tmp_path):
+        """Test update check when update is available"""
+        import check_updates
+        import os
+
+        # Create a test skills directory with an old skill
+        skills_dir = tmp_path / "skills"
+        skills_dir.mkdir()
+        skill_dir = skills_dir / "test-skill"
+        skill_dir.mkdir()
+        skill_md = skill_dir / "SKILL.md"
+        skill_md.write_text("---\nname: test-skill\n---\n")
+
+        # Set local modification time to 2023-12-31 (older than API response)
+        old_time = 1703980800  # 2023-12-31 00:00:00 UTC
+        os.utime(skill_dir, (old_time, old_time))
+
+        # Mock API response with newer timestamp (2024-01-01)
+        mock_search.return_value = {
+            "name": "test-skill",
+            "updatedAt": 1704067200,  # 2024-01-01 (newer)
+            "githubUrl": "https://github.com/test/skill",
+            "skillUrl": "https://skillsmp.com/skills/test-skill",
+            "stars": 100,
+        }
+
+        result = check_updates.check_skill_updates(skills_dir=skills_dir)
+
+        assert len(result["updates"]) == 1
+        assert result["updates"][0]["name"] == "test-skill"
