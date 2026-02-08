@@ -59,7 +59,9 @@ python skills/skillsmp-searcher/scripts/ai_search.py "How to create a web scrape
 
 ### API Documentation
 
-Detailed API documentation is available at `skills/skillsmp-searcher/references/api_documentation.md`
+- **Official API Documentation**: [https://skillsmp.com/docs/api](https://skillsmp.com/docs/api)
+- **中文API文档**: [https://skillsmp.com/zh/docs/api](https://skillsmp.com/zh/docs/api)
+- **Local Reference**: `skills/skillsmp-searcher/references/api_documentation.md`
 
 ### Development
 
@@ -154,7 +156,9 @@ python skills/skillsmp-searcher/scripts/ai_search.py "如何创建网络爬虫"
 
 ### API文档
 
-详细的API文档位于 `skills/skillsmp-searcher/references/api_documentation.md`
+- **官方API文档**: [https://skillsmp.com/docs/api](https://skillsmp.com/docs/api)
+- **中文API文档**: [https://skillsmp.com/zh/docs/api](https://skillsmp.com/zh/docs/api)
+- **本地参考文档**: `skills/skillsmp-searcher/references/api_documentation.md`
 
 ### 开发
 
