@@ -166,17 +166,13 @@ def format_updates(updates: list[dict]):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Check SkillsMP skills for available updates"
-    )
+    parser = argparse.ArgumentParser(description="Check SkillsMP skills for available updates")
     parser.add_argument(
         "--force",
         action="store_true",
         help="Force check even if recently checked",
     )
-    parser.add_argument(
-        "--json", action="store_true", help="Output results in JSON format"
-    )
+    parser.add_argument("--json", action="store_true", help="Output results in JSON format")
     parser.add_argument("--api-key", help="API key (overrides file)")
 
     args = parser.parse_args()

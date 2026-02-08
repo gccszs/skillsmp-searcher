@@ -91,16 +91,12 @@ def install_from_search_results(skill_index: int, search_query: str, **search_kw
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Install skills from SkillsMP marketplace"
-    )
+    parser = argparse.ArgumentParser(description="Install skills from SkillsMP marketplace")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Install command
     install_parser = subparsers.add_parser("install", help="Install a skill")
-    install_parser.add_argument(
-        "query", help="Search query to find the skill (or direct URL/path)"
-    )
+    install_parser.add_argument("query", help="Search query to find the skill (or direct URL/path)")
     install_parser.add_argument(
         "--index",
         type=int,

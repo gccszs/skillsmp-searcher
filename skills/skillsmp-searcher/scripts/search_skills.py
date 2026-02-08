@@ -36,9 +36,7 @@ def format_results(results):
     """Format search results for display"""
     if not results.get("success", True):
         error = results.get("error", {})
-        print(
-            f"Error: {error.get('code', 'UNKNOWN')} - {error.get('message', 'Unknown error')}"
-        )
+        print(f"Error: {error.get('code', 'UNKNOWN')} - {error.get('message', 'Unknown error')}")
         return
 
     data = results.get("data", {})
@@ -60,16 +58,12 @@ def format_results(results):
 
         print(f"{i}. {name}")
         print(f"   Author: {author} | Stars: {stars}")
-        print(
-            f"   Description: {description[:100]}{'...' if len(description) > 100 else ''}"
-        )
+        print(f"   Description: {description[:100]}{'...' if len(description) > 100 else ''}")
         print()
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Search SkillsMP marketplace for skills"
-    )
+    parser = argparse.ArgumentParser(description="Search SkillsMP marketplace for skills")
     parser.add_argument("query", help="Search keyword")
     parser.add_argument("--page", type=int, default=1, help="Page number (default: 1)")
     parser.add_argument(

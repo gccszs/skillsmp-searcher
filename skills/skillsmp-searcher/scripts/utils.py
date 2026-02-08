@@ -33,9 +33,7 @@ class APIRequestError(SkillsMPError):
 
 # API Configuration
 BASE_URL = os.getenv("SKILLSMP_API_BASE_URL", "https://skillsmp.com/api/v1")
-API_KEY_FILE = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "references", "api_key.txt"
-)
+API_KEY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "references", "api_key.txt")
 API_KEY_REAL_FILE = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "references", "api_key_real.txt"
 )

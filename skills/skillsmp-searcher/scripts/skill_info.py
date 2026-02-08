@@ -75,9 +75,7 @@ def format_skill_details(skill: dict):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="View detailed information about a SkillsMP skill"
-    )
+    parser = argparse.ArgumentParser(description="View detailed information about a SkillsMP skill")
     parser.add_argument("skill_id", help="Skill ID or name")
     parser.add_argument("--json", action="store_true", help="Output raw JSON")
     parser.add_argument("--api-key", help="API key (overrides file)")
