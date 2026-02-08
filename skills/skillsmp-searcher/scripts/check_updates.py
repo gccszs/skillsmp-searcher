@@ -9,6 +9,7 @@ import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Optional
 
 from utils import (
     APIRequestError,
@@ -62,7 +63,7 @@ def mark_as_checked(skill_name: str):
 
 
 def check_skill_updates(
-    skills_dir: Path = None, force: bool = False, api_key: str = None
+    skills_dir: Optional[Path] = None, force: bool = False, api_key: Optional[str] = None
 ) -> list[dict]:
     """
     Check all installed skills for available updates.

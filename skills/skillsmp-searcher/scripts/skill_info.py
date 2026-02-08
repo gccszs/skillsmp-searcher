@@ -7,11 +7,12 @@ View detailed information about a specific skill.
 import argparse
 import json
 import sys
+from typing import Optional
 
 from utils import APIRequestError, SkillsMPError, load_api_key, make_api_request
 
 
-def get_skill_details(skill_id: str, api_key: str = None) -> dict:
+def get_skill_details(skill_id: str, api_key: Optional[str] = None) -> dict:
     """
     Get detailed information about a specific skill.
 

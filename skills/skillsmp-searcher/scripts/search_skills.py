@@ -7,11 +7,18 @@ Search for skills using keywords on SkillsMP marketplace.
 import argparse
 import json
 import sys
+from typing import Optional
 
 from utils import APIRequestError, SkillsMPError, make_api_request
 
 
-def search_skills(query, page=1, limit=20, sort_by="stars", api_key=None):
+def search_skills(
+    query: str,
+    page: int = 1,
+    limit: int = 20,
+    sort_by: str = "stars",
+    api_key: Optional[str] = None,
+) -> dict:
     """
     Search skills using keyword search.
 

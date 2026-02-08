@@ -7,11 +7,12 @@ Search for skills using AI-powered semantic search on SkillsMP marketplace.
 import argparse
 import json
 import sys
+from typing import Optional
 
 from utils import APIRequestError, SkillsMPError, make_api_request
 
 
-def ai_search(query, api_key=None):
+def ai_search(query: str, api_key: Optional[str] = None) -> dict:
     """
     Search skills using AI semantic search.
 
