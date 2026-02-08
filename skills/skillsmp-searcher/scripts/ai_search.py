@@ -6,63 +6,9 @@ Search for skills using AI-powered semantic search on SkillsMP marketplace.
 
 import argparse
 import json
-import os
 import sys
 
-import requests
-
-# API Configuration
-BASE_URL = os.getenv("SKILLSMP_API_BASE_URL", "https://skillsmp.com/api/v1")
-API_KEY_FILE = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "references", "api_key.txt"
-)
-API_KEY_REAL_FILE = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "references", "api_key_real.txt"
-)
-
-
-def load_api_key():
-    """
-    Load API key from multiple sources (priority order):
-    1. Environment variable SKILLSMP_API_KEY
-    2. File references/api_key_real.txt (for development, gitignored)
-    3. File references/api_key.txt (template file)
-    """
-    # Try environment variable first (most secure)
-    env_key = os.getenv("SKILLSMP_API_KEY")
-    if env_key:
-        return env_key
-
-    # Try api_key_real.txt (for development)
-    try:
-        with open(API_KEY_REAL_FILE, "r") as f:
-            api_key = f.read().strip()
-            if api_key and not api_key.startswith("#"):
-                return api_key
-    except FileNotFoundError:
-        pass
-
-    # Try api_key.txt (template file)
-    try:
-        with open(API_KEY_FILE, "r") as f:
-            api_key = f.read().strip()
-            if (
-                api_key
-                and not api_key.startswith("#")
-                and "your_api_key_here" not in api_key
-            ):
-                return api_key
-    except FileNotFoundError:
-        pass
-
-    # No valid API key found
-    print("Error: No valid API key found.")
-    print("\nPlease configure your API key using one of these methods:")
-    print("1. Set environment variable SKILLSMP_API_KEY (recommended)")
-    print("2. Create file: references/api_key_real.txt")
-    print("3. Edit file: references/api_key.txt")
-    print("\nSee README.md for detailed instructions.")
-    sys.exit(1)
+from utils import APIRequestError, SkillsMPError, make_api_request
 
 
 def ai_search(query, api_key=None):
@@ -75,29 +21,12 @@ def ai_search(query, api_key=None):
 
     Returns:
         dict: Search results
+
+    Raises:
+        SkillsMPError: If the search fails
     """
-    if api_key is None:
-        api_key = load_api_key()
-
-    url = f"{BASE_URL}/skills/ai-search"
-    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     params = {"q": query}
-
-    try:
-        response = requests.get(url, headers=headers, params=params)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.HTTPError as e:
-        print(f"HTTP Error: {e}")
-        if response.status_code == 401:
-            error_data = response.json()
-            print(
-                f"API Error: {error_data.get('error', {}).get('message', 'Authentication failed')}"
-            )
-        sys.exit(1)
-    except requests.exceptions.RequestException as e:
-        print(f"Request Error: {e}")
-        sys.exit(1)
+    return make_api_request("/skills/ai-search", params, api_key=api_key)
 
 
 def format_results(results):
@@ -143,12 +72,17 @@ def main():
 
     args = parser.parse_args()
 
-    results = ai_search(query=args.query, api_key=args.api_key)
+    try:
+        results = ai_search(query=args.query, api_key=args.api_key)
 
-    if args.json:
-        print(json.dumps(results, indent=2))
-    else:
-        format_results(results)
+        if args.json:
+            print(json.dumps(results, indent=2))
+        else:
+            format_results(results)
+
+    except SkillsMPError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
