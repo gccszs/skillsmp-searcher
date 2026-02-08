@@ -18,7 +18,7 @@
 
 Choose one of the following methods to install SkillsMP Searcher:
 
-### Method 1: NPX Quick Install �?(Recommended)
+### Method 1: NPX Quick Install �?(Recommended)
 
 The fastest way to install directly from GitHub:
 
@@ -74,7 +74,7 @@ You should see `skillsmp-searcher` in the list of installed skills.
 
 Before using this skill, you need to configure your SkillsMP API key. Choose one of the following methods:
 
-**Method 1: Environment Variable (Recommended) �?*
+**Method 1: Environment Variable (Recommended) �?*
 
 ```bash
 # Linux/macOS - Add to ~/.bashrc or ~/.zshrc
@@ -137,10 +137,10 @@ Install skills directly from search results:
 
 ```bash
 # Search and install the first result
-python skills/skillsmp-searcher/scripts/install_skill.py "video editing"
+python skills/skillsmp-searcher/scripts/install_skill.py install "video editing"
 
 # Search and install by index
-python skills/skillsmp-searcher/scripts/install_skill.py "PDF" --index 2
+python skills/skillsmp-searcher/scripts/install_skill.py install "PDF" --index 2
 
 # Install from direct URL
 python skills/skillsmp-searcher/scripts/install_skill.py install "https://github.com/user/repo/releases/latest/download/skill.skill"
@@ -154,6 +154,43 @@ python skills/skillsmp-searcher/scripts/install_skill.py list
 - `--index N`: Install the Nth skill from search results (default: 1)
 - `--page N`: Search page number (default: 1)
 - `--sort`: Sort by `stars` (default) or `recent`
+
+### View Skill Details ℹ️
+
+Get detailed information about a specific skill:
+
+```bash
+python skills/skillsmp-searcher/scripts/skill_info.py "skill-name"
+```
+
+**Details include:**
+- Author and stars
+- Version information
+- Full description
+- Tags and categories
+- Installation commands
+- Usage examples
+
+### Check for Updates 🔄
+
+Check all installed skills for available updates:
+
+```bash
+# Check for updates (respects 1-hour cache)
+python skills/skillsmp-searcher/scripts/check_updates.py
+
+# Force check even if recently checked
+python skills/skillsmp-searcher/scripts/check_updates.py --force
+
+# Output in JSON format
+python skills/skillsmp-searcher/scripts/check_updates.py --json
+```
+
+**Features:**
+- Checks all installed skills against SkillsMP marketplace
+- Smart caching (checks at most once per hour)
+- Shows current vs latest version
+- One-line update commands
 
 ## API Documentation
 
@@ -193,13 +230,13 @@ mypy scripts/
 ```
 skillsmp-searcher/
 ├── .github/
-�?  └── workflows/          # CI/CD workflows
+�?  └── workflows/          # CI/CD workflows
 ├── skills/
-�?  └── skillsmp-searcher/  # Skill package
-�?      ├── SKILL.md        # Skill metadata
-�?      ├── scripts/        # Executable scripts
-�?      ├── references/     # Documentation and configs
-�?      └── assets/         # Resource files
+�?  └── skillsmp-searcher/  # Skill package
+�?      ├── SKILL.md        # Skill metadata
+�?      ├── scripts/        # Executable scripts
+�?      ├── references/     # Documentation and configs
+�?      └── assets/         # Resource files
 ├── tests/                  # Test suite
 ├── requirements.txt        # Python dependencies
 └── README.md              # This file
