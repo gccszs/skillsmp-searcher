@@ -12,13 +12,6 @@ from typing import Dict, Optional
 
 import requests
 
-# Fix UTF-8 encoding for Windows
-if sys.platform == "win32":
-    import io
-
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
-
 
 class SkillsMPError(Exception):
     """Base exception for SkillsMP errors"""
@@ -274,7 +267,7 @@ def install_skill(skill_path: Path, skills_dir: Optional[Path] = None) -> Path:
             skill_dir_name = first_item.split("/")[0]
             installed_path = skills_dir / skill_dir_name
 
-            print(f"✅ Skill installed to: {installed_path}")
+            print(f"Skill installed to: {installed_path}")
             return installed_path
 
     except zipfile.BadZipFile:

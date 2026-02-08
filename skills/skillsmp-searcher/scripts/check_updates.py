@@ -10,13 +10,6 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# Fix UTF-8 encoding for Windows
-if sys.platform == "win32":
-    import io
-
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
-
 from utils import (
     APIRequestError,
     SkillsMPError,
