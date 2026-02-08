@@ -1,5 +1,9 @@
 # SkillsMP Searcher
 
+[English](README.md) | [简体中文](README_CN.md)
+
+---
+
 **SkillsMP Searcher** 是一个 Claude Code 技能，为 [SkillsMP](https://skillsmp.com/) 技能商城提供强大的搜索功能。它支持关键词搜索和AI驱动的语义搜索，帮助您快速发现和安装有用的技能。
 
 ## 功能特性
