@@ -252,7 +252,7 @@ def format_update_summary(result: Dict):
 
 def interactive_details_loop(result: Dict, api_key: Optional[str] = None):
     """
-    Interactive loop for viewing skill details.
+    Interactive loop for viewing skill details and updating.
 
     Args:
         result: Update check result from check_skill_updates()
@@ -284,6 +284,7 @@ def interactive_details_loop(result: Dict, api_key: Optional[str] = None):
             # Get selected update
             selected = updates[skill_index - 1]
             skill_name = selected["name"]
+            github_url = selected["github_url"]
 
             # Import skill_diff to show details
             import subprocess
@@ -294,6 +295,33 @@ def interactive_details_loop(result: Dict, api_key: Optional[str] = None):
                 cwd=Path(__file__).parent,
                 capture_output=False,
             )
+
+            # Ask if user wants to update
+            print("\n" + "=" * 60)
+            print("Update this skill? [Y/n]:", end=" ")
+
+            update_choice = input().strip().lower()
+
+            if update_choice == "n":
+                print("⏭️  Skipped")
+                continue
+
+            if update_choice in ("", "y", "yes"):
+                # Import and run skill_downloader
+                print(f"\n📦 Updating {skill_name}...")
+
+                update_result = subprocess.run(
+                    ["python", "skill_downloader.py", skill_name, "--github-url", github_url],
+                    cwd=Path(__file__).parent,
+                    capture_output=False,
+                )
+
+                if update_result.returncode == 0:
+                    print(f"\n✅ {skill_name} updated successfully!")
+                else:
+                    print(f"\n❌ {skill_name} update failed")
+            else:
+                print("⏭️  Skipped (invalid input)")
 
         except ValueError:
             print("❌ Invalid input. Please enter a number or 'q'")
