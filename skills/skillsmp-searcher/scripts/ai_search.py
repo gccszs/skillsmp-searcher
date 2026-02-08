@@ -4,11 +4,12 @@ SkillsMP AI Semantic Search Script
 Search for skills using AI-powered semantic search on SkillsMP marketplace.
 """
 
-import requests
 import argparse
 import json
-import sys
 import os
+import sys
+
+import requests
 
 # API Configuration
 BASE_URL = os.getenv("SKILLSMP_API_BASE_URL", "https://skillsmp.com/api/v1")
