@@ -11,7 +11,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from utils import (
     APIRequestError,
@@ -55,7 +55,7 @@ def get_installed_skills_with_metadata(skills_dir: Path) -> List[Dict]:
     Returns:
         List of dicts with skill metadata: name, path, local_modified
     """
-    skills = []
+    skills: List[Dict[str, Any]] = []
 
     if not skills_dir.exists():
         return skills
@@ -142,7 +142,7 @@ def check_skill_updates(skills_dir: Optional[Path] = None, api_key: Optional[str
 
     installed_skills = get_installed_skills_with_metadata(skills_dir)
 
-    result = {
+    result: Dict[str, List[Any]] = {
         "updates": [],  # Skills with remote updates
         "up_to_date": [],  # Skills that are current
         "not_found": [],  # Skills not found on SkillsMP
@@ -290,7 +290,7 @@ def interactive_details_loop(result: Dict, api_key: Optional[str] = None):
             import subprocess
 
             print(f"\n🔍 Fetching details for {skill_name}...")
-            result = subprocess.run(
+            subprocess.run(
                 ["python", "skill_diff.py", skill_name],
                 cwd=Path(__file__).parent,
                 capture_output=False,

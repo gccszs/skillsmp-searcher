@@ -97,27 +97,28 @@ def compare_versions(local: Dict[str, str], remote: Dict[str, Any]) -> Dict[str,
     Returns:
         Dict with comparison results
     """
-    differences = {
+    differences: Dict[str, Any] = {
         "name_changed": False,
         "description_changed": False,
         "author_changed": False,
         "stars_changed": False,
         "fields": [],
     }
+    fields_list: List[Dict[str, Any]] = differences["fields"]  # type: ignore[assignment]
 
     # Compare name
     local_name = local.get("name", "")
     remote_name = remote.get("name", "")
     if local_name and remote_name and local_name != remote_name:
         differences["name_changed"] = True
-        differences["fields"].append({"field": "name", "local": local_name, "remote": remote_name})
+        fields_list.append({"field": "name", "local": local_name, "remote": remote_name})
 
     # Compare description
     local_desc = local.get("description", "")
     remote_desc = remote.get("description", "")
     if local_desc and remote_desc and local_desc != remote_desc:
         differences["description_changed"] = True
-        differences["fields"].append(
+        fields_list.append(
             {"field": "description", "local": local_desc[:100], "remote": remote_desc[:100]}
         )
 
@@ -126,14 +127,12 @@ def compare_versions(local: Dict[str, str], remote: Dict[str, Any]) -> Dict[str,
     remote_author = remote.get("author", "")
     if local_author and remote_author and local_author != remote_author:
         differences["author_changed"] = True
-        differences["fields"].append(
-            {"field": "author", "local": local_author, "remote": remote_author}
-        )
+        fields_list.append({"field": "author", "local": local_author, "remote": remote_author})
 
     # Compare stars (always check, not in frontmatter)
     remote_stars = remote.get("stars", 0)
     differences["stars_changed"] = True
-    differences["fields"].append({"field": "stars", "remote": remote_stars})
+    fields_list.append({"field": "stars", "remote": remote_stars})
 
     return differences
 
