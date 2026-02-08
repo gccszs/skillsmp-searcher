@@ -4,6 +4,10 @@ Shared utilities for SkillsMP search scripts
 """
 
 import os
+import subprocess
+import sys
+import zipfile
+from pathlib import Path
 from typing import Dict, Optional
 
 import requests
@@ -157,3 +161,161 @@ def make_api_request(
         raise APIRequestError(f"Request timed out after {timeout} seconds") from None
     except requests.exceptions.RequestException as e:
         raise APIRequestError(f"Request failed: {e}") from e
+
+
+def get_claude_skills_dir() -> Path:
+    """
+    Get the Claude Code skills directory.
+
+    Returns:
+        Path: Path to Claude skills directory
+
+    Raises:
+        SkillsMPError: If Claude skills directory cannot be found
+    """
+    # Try common Claude Code skills directories
+    possible_paths = [
+        Path.home() / ".claude" / "skills",
+        Path.home() / "AppData" / "Roaming" / "claude" / "skills",  # Windows
+        Path.home() / ".config" / "claude" / "skills",  # Linux/macOS
+    ]
+
+    for path in possible_paths:
+        if path.exists():
+            return path
+
+    # If none exist, create the default one
+    default_path = Path.home() / ".claude" / "skills"
+    try:
+        default_path.mkdir(parents=True, exist_ok=True)
+        return default_path
+    except OSError as e:
+        raise SkillsMPError(f"Cannot create Claude skills directory: {e}") from e
+
+
+def download_skill(skill_url: str, download_dir: Path) -> Path:
+    """
+    Download a skill file from URL.
+
+    Args:
+        skill_url: URL to download the skill from
+        download_dir: Directory to save the downloaded file
+
+    Returns:
+        Path: Path to downloaded skill file
+
+    Raises:
+        APIRequestError: If download fails
+    """
+    proxies = load_proxies()
+
+    try:
+        response = requests.get(skill_url, proxies=proxies, timeout=30, stream=True)
+        response.raise_for_status()
+
+        # Extract filename from URL or use default
+        filename = skill_url.split("/")[-1] or "downloaded_skill.skill"
+        skill_path = download_dir / filename
+
+        with open(skill_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+
+        return skill_path
+    except requests.exceptions.RequestException as e:
+        raise APIRequestError(f"Failed to download skill: {e}") from e
+
+
+def install_skill(skill_path: Path, skills_dir: Optional[Path] = None) -> Path:
+    """
+    Install a skill from a .skill file to Claude Code skills directory.
+
+    Args:
+        skill_path: Path to the .skill file
+        skills_dir: Custom skills directory (if None, uses default Claude location)
+
+    Returns:
+        Path: Path to installed skill directory
+
+    Raises:
+        SkillsMPError: If installation fails
+    """
+    if skills_dir is None:
+        skills_dir = get_claude_skills_dir()
+
+    if not skill_path.exists():
+        raise SkillsMPError(f"Skill file not found: {skill_path}")
+
+    # Extract the skill file
+    try:
+        with zipfile.ZipFile(skill_path, "r") as zip_ref:
+            # Get the root directory name in the zip
+            namelist = zip_ref.namelist()
+            if not namelist:
+                raise SkillsMPError("Skill file is empty")
+
+            # Extract all contents
+            zip_ref.extractall(skills_dir)
+
+            # Find the extracted skill directory
+            # Typically the first entry is the skill directory
+            first_item = namelist[0]
+            skill_dir_name = first_item.split("/")[0]
+            installed_path = skills_dir / skill_dir_name
+
+            print(f"✅ Skill installed to: {installed_path}")
+            return installed_path
+
+    except zipfile.BadZipFile:
+        raise SkillsMPError(f"Invalid skill file: {skill_path}") from None
+    except Exception as e:
+        raise SkillsMPError(f"Failed to install skill: {e}") from e
+
+
+def install_skill_from_url(skill_url: str, skills_dir: Optional[Path] = None) -> Path:
+    """
+    Download and install a skill from URL.
+
+    Args:
+        skill_url: URL to download the skill from
+        skills_dir: Custom skills directory (if None, uses default Claude location)
+
+    Returns:
+        Path: Path to installed skill directory
+
+    Raises:
+        APIRequestError: If download fails
+        SkillsMPError: If installation fails
+    """
+    # Download to temp directory
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        skill_file = download_skill(skill_url, temp_path)
+        return install_skill(skill_file, skills_dir)
+
+
+def list_installed_skills(skills_dir: Optional[Path] = None) -> list[str]:
+    """
+    List all installed skills in Claude Code skills directory.
+
+    Args:
+        skills_dir: Custom skills directory (if None, uses default Claude location)
+
+    Returns:
+        list[str]: List of installed skill names
+    """
+    if skills_dir is None:
+        skills_dir = get_claude_skills_dir()
+
+    if not skills_dir.exists():
+        return []
+
+    skills = []
+    for item in skills_dir.iterdir():
+        if item.is_dir() and (item / "SKILL.md").exists():
+            skills.append(item.name)
+
+    return sorted(skills)

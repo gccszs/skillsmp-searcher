@@ -16,11 +16,47 @@
 
 ## 安装
 
+选择以下任一方法安装 SkillsMP Searcher：
+
+### 方法1：从发布文件安装（推荐）
+
 1. 从[发布页面](https://github.com/gccszs/skillsmp-searcher/releases)下载最新的 `skillsmp-searcher.skill`
-2. 在Claude Code中安装技能：
+2. 使用 Claude Code CLI 安装：
    ```bash
    claude skill install skillsmp-searcher.skill
    ```
+
+### 方法2：从 GitHub 安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/gccszs/skillsmp-searcher.git
+
+# 从本地目录安装
+claude skill install skillsmp-searcher/skills/skillsmp-searcher
+```
+
+### 方法3：一行命令安装（PowerShell）
+
+```powershell
+# 下载并安装，一条命令完成
+Invoke-WebRequest -Uri "https://github.com/gccszs/skillsmp-searcher/releases/latest/download/skillsmp-searcher.skill" -OutFile "skillsmp-searcher.skill"; claude skill install skillsmp-searcher.skill
+```
+
+### 方法4：一行命令安装（Bash）
+
+```bash
+# 下载并安装，一条命令完成
+curl -L https://github.com/gccszs/skillsmp-searcher/releases/latest/download/skillsmp-searcher.skill -o skillsmp-searcher.skill && claude skill install skillsmp-searcher.skill
+```
+
+### 验证安装
+
+```bash
+claude skill list
+```
+
+您应该能在已安装技能列表中看到 `skillsmp-searcher`。
 
 ## 配置
 
@@ -84,6 +120,30 @@ python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --limit 10 --sort
 ```bash
 python skills/skillsmp-searcher/scripts/ai_search.py "如何创建网络爬虫"
 ```
+
+### 一键安装技能 🔧
+
+直接从搜索结果安装技能：
+
+```bash
+# 搜索并安装第一个结果
+python skills/skillsmp-searcher/scripts/install_skill.py "视频编辑"
+
+# 搜索并按索引安装
+python skills/skillsmp-searcher/scripts/install_skill.py "PDF" --index 2
+
+# 从直接URL安装
+python skills/skillsmp-searcher/scripts/install_skill.py install "https://github.com/user/repo/releases/latest/download/skill.skill"
+
+# 列出已安装的技能
+python skills/skillsmp-searcher/scripts/install_skill.py list
+```
+
+**安装选项：**
+- `query`: 搜索查询或 `.skill` 文件的直接URL/路径
+- `--index N`: 安装搜索结果中的第N个技能（默认：1）
+- `--page N`: 搜索页码（默认：1）
+- `--sort`: 按`stars`（默认）或`recent`排序
 
 ## API文档
 

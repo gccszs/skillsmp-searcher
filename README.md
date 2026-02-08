@@ -16,11 +16,47 @@
 
 ## Installation
 
+Choose one of the following methods to install SkillsMP Searcher:
+
+### Method 1: Install from Release File (Recommended)
+
 1. Download the latest `skillsmp-searcher.skill` from [Releases](https://github.com/gccszs/skillsmp-searcher/releases)
-2. Install the skill in Claude Code:
+2. Install using Claude Code CLI:
    ```bash
    claude skill install skillsmp-searcher.skill
    ```
+
+### Method 2: Install from GitHub
+
+```bash
+# Clone the repository
+git clone https://github.com/gccszs/skillsmp-searcher.git
+
+# Install from local directory
+claude skill install skillsmp-searcher/skills/skillsmp-searcher
+```
+
+### Method 3: One-Line Install (PowerShell)
+
+```powershell
+# Download and install in one command
+Invoke-WebRequest -Uri "https://github.com/gccszs/skillsmp-searcher/releases/latest/download/skillsmp-searcher.skill" -OutFile "skillsmp-searcher.skill"; claude skill install skillsmp-searcher.skill
+```
+
+### Method 4: One-Line Install (Bash)
+
+```bash
+# Download and install in one command
+curl -L https://github.com/gccszs/skillsmp-searcher/releases/latest/download/skillsmp-searcher.skill -o skillsmp-searcher.skill && claude skill install skillsmp-searcher.skill
+```
+
+### Verify Installation
+
+```bash
+claude skill list
+```
+
+You should see `skillsmp-searcher` in the list of installed skills.
 
 ## Configuration
 
@@ -84,6 +120,30 @@ Search using natural language:
 ```bash
 python skills/skillsmp-searcher/scripts/ai_search.py "How to create a web scraper"
 ```
+
+### One-Click Skill Installation 🔧
+
+Install skills directly from search results:
+
+```bash
+# Search and install the first result
+python skills/skillsmp-searcher/scripts/install_skill.py "video editing"
+
+# Search and install by index
+python skills/skillsmp-searcher/scripts/install_skill.py "PDF" --index 2
+
+# Install from direct URL
+python skills/skillsmp-searcher/scripts/install_skill.py install "https://github.com/user/repo/releases/latest/download/skill.skill"
+
+# List installed skills
+python skills/skillsmp-searcher/scripts/install_skill.py list
+```
+
+**Installation Options:**
+- `query`: Search query or direct URL/path to `.skill` file
+- `--index N`: Install the Nth skill from search results (default: 1)
+- `--page N`: Search page number (default: 1)
+- `--sort`: Sort by `stars` (default) or `recent`
 
 ## API Documentation
 

@@ -54,6 +54,43 @@ python scripts/search_skills.py "SEO" --page 1 --limit 10 --sortBy stars
 python scripts/ai_search.py "How to create a web scraper"
 ```
 
+### 3. 一键安装技能
+
+使用 `scripts/install_skill.py` 搜索并安装技能。
+
+**适用场景**：
+- 用户搜索到技能后直接安装
+- 从URL直接安装技能文件
+- 管理已安装的技能
+
+**命令**：
+- `install` [query] [--index N]: 搜索并安装第N个技能（默认第1个）
+- `install` [url/path]: 直接从URL或本地路径安装
+- `list`: 列出所有已安装的技能
+
+**示例**：
+```bash
+# 搜索并安装第一个结果
+python scripts/install_skill.py install "视频编辑"
+
+# 搜索并安装指定索引的技能
+python scripts/install_skill.py install "PDF" --index 2
+
+# 从URL直接安装
+python scripts/install_skill.py install "https://example.com/skill.skill"
+
+# 从本地文件安装
+python scripts/install_skill.py install "/path/to/skill.skill"
+
+# 列出已安装的技能
+python scripts/install_skill.py list
+```
+
+**功能**：
+- 自动解压并安装技能到Claude Code技能目录
+- 支持从URL或本地文件安装
+- 列出已安装的所有技能
+
 ## API 端点
 
 详细的 API 文档请参考 `references/api_documentation.md`。
