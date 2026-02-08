@@ -2,9 +2,10 @@
 Pytest configuration and shared fixtures for SkillsMP Searcher tests
 """
 
-import pytest
 import os
 from unittest.mock import patch
+
+import pytest
 
 
 @pytest.fixture
@@ -20,7 +21,7 @@ def mock_api_response():
                     "description": "A test skill for unit testing",
                     "author": "Test Author",
                     "stars": 42,
-                    "relevance_score": 0.95
+                    "relevance_score": 0.95,
                 },
                 {
                     "id": "test-skill-2",
@@ -28,13 +29,13 @@ def mock_api_response():
                     "description": "Another test skill",
                     "author": "Another Author",
                     "stars": 10,
-                    "relevance_score": 0.87
-                }
+                    "relevance_score": 0.87,
+                },
             ],
             "total": 2,
             "page": 1,
-            "limit": 20
-        }
+            "limit": 20,
+        },
     }
 
 
@@ -45,15 +46,15 @@ def mock_api_error_response():
         "success": False,
         "error": {
             "code": "INVALID_API_KEY",
-            "message": "The provided API key is invalid"
-        }
+            "message": "The provided API key is invalid",
+        },
     }
 
 
 @pytest.fixture
 def mock_env_api_key():
     """Mock environment variable API key"""
-    with patch.dict(os.environ, {'SKILLSMP_API_KEY': 'test_key_123'}):
+    with patch.dict(os.environ, {"SKILLSMP_API_KEY": "test_key_123"}):
         yield
 
 
