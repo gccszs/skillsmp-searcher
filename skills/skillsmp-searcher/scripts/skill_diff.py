@@ -9,7 +9,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from utils import APIRequestError, SkillsMPError, make_api_request
 
@@ -86,7 +86,7 @@ def get_skill_details_from_skillsmp(
         return None
 
 
-def compare_versions(local: Dict, remote: Dict) -> Dict[str, any]:
+def compare_versions(local: Dict[str, str], remote: Dict[str, Any]) -> Dict[str, Any]:
     """
     Compare local and remote skill versions.
 
@@ -138,7 +138,9 @@ def compare_versions(local: Dict, remote: Dict) -> Dict[str, any]:
     return differences
 
 
-def format_diff_output(skill_name: str, local_path: Path, remote_data: Dict, differences: Dict):
+def format_diff_output(
+    skill_name: str, local_path: Path, remote_data: Dict[str, Any], differences: Dict[str, Any]
+):
     """Format and display diff comparison."""
     print("\n" + "=" * 60)
     print(f"📦 {skill_name} - Version Comparison")
