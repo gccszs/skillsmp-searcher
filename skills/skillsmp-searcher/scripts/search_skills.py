@@ -12,8 +12,12 @@ import os
 
 # API Configuration
 BASE_URL = os.getenv("SKILLSMP_API_BASE_URL", "https://skillsmp.com/api/v1")
-API_KEY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "references", "api_key.txt")
-API_KEY_REAL_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "references", "api_key_real.txt")
+API_KEY_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "references", "api_key.txt"
+)
+API_KEY_REAL_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "references", "api_key_real.txt"
+)
 
 
 def load_api_key():
@@ -30,7 +34,7 @@ def load_api_key():
 
     # Try api_key_real.txt (for development)
     try:
-        with open(API_KEY_REAL_FILE, 'r') as f:
+        with open(API_KEY_REAL_FILE, "r") as f:
             api_key = f.read().strip()
             if api_key and not api_key.startswith("#"):
                 return api_key
@@ -39,9 +43,13 @@ def load_api_key():
 
     # Try api_key.txt (template file)
     try:
-        with open(API_KEY_FILE, 'r') as f:
+        with open(API_KEY_FILE, "r") as f:
             api_key = f.read().strip()
-            if api_key and not api_key.startswith("#") and "your_api_key_here" not in api_key:
+            if (
+                api_key
+                and not api_key.startswith("#")
+                and "your_api_key_here" not in api_key
+            ):
                 return api_key
     except FileNotFoundError:
         pass
@@ -74,16 +82,8 @@ def search_skills(query, page=1, limit=20, sort_by="stars", api_key=None):
         api_key = load_api_key()
 
     url = f"{BASE_URL}/skills/search"
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    params = {
-        "q": query,
-        "page": page,
-        "limit": min(limit, 100),
-        "sortBy": sort_by
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    params = {"q": query, "page": page, "limit": min(limit, 100), "sortBy": sort_by}
 
     try:
         response = requests.get(url, headers=headers, params=params)
@@ -93,7 +93,9 @@ def search_skills(query, page=1, limit=20, sort_by="stars", api_key=None):
         print(f"HTTP Error: {e}")
         if response.status_code == 401:
             error_data = response.json()
-            print(f"API Error: {error_data.get('error', {}).get('message', 'Authentication failed')}")
+            print(
+                f"API Error: {error_data.get('error', {}).get('message', 'Authentication failed')}"
+            )
         sys.exit(1)
     except requests.exceptions.RequestException as e:
         print(f"Request Error: {e}")
@@ -104,7 +106,9 @@ def format_results(results):
     """Format search results for display"""
     if not results.get("success", True):
         error = results.get("error", {})
-        print(f"Error: {error.get('code', 'UNKNOWN')} - {error.get('message', 'Unknown error')}")
+        print(
+            f"Error: {error.get('code', 'UNKNOWN')} - {error.get('message', 'Unknown error')}"
+        )
         return
 
     data = results.get("data", {})
@@ -122,17 +126,27 @@ def format_results(results):
 
         print(f"{i}. {name}")
         print(f"   Author: {author} | Stars: {stars}")
-        print(f"   Description: {description[:100]}{'...' if len(description) > 100 else ''}")
+        print(
+            f"   Description: {description[:100]}{'...' if len(description) > 100 else ''}"
+        )
         print()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Search SkillsMP marketplace for skills")
+    parser = argparse.ArgumentParser(
+        description="Search SkillsMP marketplace for skills"
+    )
     parser.add_argument("query", help="Search keyword")
     parser.add_argument("--page", type=int, default=1, help="Page number (default: 1)")
-    parser.add_argument("--limit", type=int, default=20, help="Items per page (default: 20, max: 100)")
-    parser.add_argument("--sort", choices=["stars", "recent"], default="stars",
-                       help="Sort by: 'stars' (default) or 'recent'")
+    parser.add_argument(
+        "--limit", type=int, default=20, help="Items per page (default: 20, max: 100)"
+    )
+    parser.add_argument(
+        "--sort",
+        choices=["stars", "recent"],
+        default="stars",
+        help="Sort by: 'stars' (default) or 'recent'",
+    )
     parser.add_argument("--json", action="store_true", help="Output raw JSON")
     parser.add_argument("--api-key", help="API key (overrides file)")
 
@@ -143,7 +157,7 @@ def main():
         page=args.page,
         limit=args.limit,
         sort_by=args.sort,
-        api_key=args.api_key
+        api_key=args.api_key,
     )
 
     if args.json:
