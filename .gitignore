@@ -67,5 +67,5 @@ Thumbs.db
 skills/skillsmp-searcher/references/api_key_real.txt
 
 # Worktrees
-.worktrees/
-worktrees/
+.worktrees
+worktrees
