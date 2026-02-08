@@ -8,6 +8,13 @@ import argparse
 import json
 import sys
 
+# Fix UTF-8 encoding for Windows
+if sys.platform == "win32":
+    import io
+
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
 import search_skills
 from utils import install_skill, install_skill_from_url, list_installed_skills
 

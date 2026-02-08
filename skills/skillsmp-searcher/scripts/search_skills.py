@@ -8,6 +8,13 @@ import argparse
 import json
 import sys
 
+# Fix UTF-8 encoding for Windows
+if sys.platform == "win32":
+    import io
+
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
 from utils import APIRequestError, SkillsMPError, make_api_request
 
 
@@ -43,7 +50,11 @@ def format_results(results):
 
     data = results.get("data", {})
     skills = data.get("skills", [])
-    total = data.get("total", 0)
+
+    # Use total from API, fallback to actual count
+    total = data.get("total", len(skills))
+    if total == 0 and len(skills) > 0:
+        total = len(skills)
 
     print(f"\n=== Search Results ===")
     print(f"Total: {total} skills found\n")

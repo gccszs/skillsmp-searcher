@@ -12,6 +12,13 @@ from typing import Dict, Optional
 
 import requests
 
+# Fix UTF-8 encoding for Windows
+if sys.platform == "win32":
+    import io
+
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
 
 class SkillsMPError(Exception):
     """Base exception for SkillsMP errors"""
@@ -59,27 +66,30 @@ def load_api_key() -> str:
     if env_key:
         return env_key
 
+    # Helper function to read first non-comment line from file
+    def read_first_valid_key(file_path: Path) -> Optional[str]:
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    # Skip empty lines and comments
+                    if line and not line.startswith("#"):
+                        # Skip placeholder text
+                        if "your_api_key_here" not in line.lower():
+                            return line
+        except FileNotFoundError:
+            pass
+        return None
+
     # Try api_key_real.txt (for development)
-    try:
-        with open(API_KEY_REAL_FILE, "r") as f:
-            api_key = f.read().strip()
-            if api_key and not api_key.startswith("#"):
-                return api_key
-    except FileNotFoundError:
-        pass
+    key = read_first_valid_key(Path(API_KEY_REAL_FILE))
+    if key:
+        return key
 
     # Try api_key.txt (template file)
-    try:
-        with open(API_KEY_FILE, "r") as f:
-            api_key = f.read().strip()
-            if (
-                api_key
-                and not api_key.startswith("#")
-                and "your_api_key_here" not in api_key
-            ):
-                return api_key
-    except FileNotFoundError:
-        pass
+    key = read_first_valid_key(Path(API_KEY_FILE))
+    if key:
+        return key
 
     # No valid API key found
     raise APIKeyError(

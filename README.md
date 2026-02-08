@@ -18,7 +18,7 @@
 
 Choose one of the following methods to install SkillsMP Searcher:
 
-### Method 1: NPX Quick Install ⚡ (Recommended)
+### Method 1: NPX Quick Install �?(Recommended)
 
 The fastest way to install directly from GitHub:
 
@@ -74,7 +74,7 @@ You should see `skillsmp-searcher` in the list of installed skills.
 
 Before using this skill, you need to configure your SkillsMP API key. Choose one of the following methods:
 
-**Method 1: Environment Variable (Recommended) ✅**
+**Method 1: Environment Variable (Recommended) �?*
 
 ```bash
 # Linux/macOS - Add to ~/.bashrc or ~/.zshrc
@@ -114,7 +114,7 @@ python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --api-key "your_k
 Search for skills using specific keywords:
 
 ```bash
-python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --limit 10 --sortBy stars
+python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --limit 10 --sort stars
 ```
 
 **Parameters:**
@@ -193,13 +193,13 @@ mypy scripts/
 ```
 skillsmp-searcher/
 ├── .github/
-│   └── workflows/          # CI/CD workflows
+�?  └── workflows/          # CI/CD workflows
 ├── skills/
-│   └── skillsmp-searcher/  # Skill package
-│       ├── SKILL.md        # Skill metadata
-│       ├── scripts/        # Executable scripts
-│       ├── references/     # Documentation and configs
-│       └── assets/         # Resource files
+�?  └── skillsmp-searcher/  # Skill package
+�?      ├── SKILL.md        # Skill metadata
+�?      ├── scripts/        # Executable scripts
+�?      ├── references/     # Documentation and configs
+�?      └── assets/         # Resource files
 ├── tests/                  # Test suite
 ├── requirements.txt        # Python dependencies
 └── README.md              # This file
