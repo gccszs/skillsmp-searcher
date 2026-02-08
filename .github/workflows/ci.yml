@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install linting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install black flake8 isort mypy types-requests
+
+      - name: Check code formatting with Black
+        run: black --check skills/skillsmp-searcher/scripts/
+
+      - name: Check code style with Flake8
+        run: flake8 skills/skillsmp-searcher/scripts/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        run: flake8 skills/skillsmp-searcher/scripts/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Check import sorting with isort
+        run: isort --check-only skills/skillsmp-searcher/scripts/
+
+      - name: Type checking with mypy
+        run: mypy skills/skillsmp-searcher/scripts/ --ignore-missing-imports
+
+  test:
+    name: Test (Python ${{ matrix.python }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.9', '3.10', '3.11', '3.12']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pip install pytest pytest-cov pytest-mock
+          pytest tests/ --cov=skills/skillsmp-searcher/scripts --cov-report=term-missing --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

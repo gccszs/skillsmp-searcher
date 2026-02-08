@@ -1,0 +1,72 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  package:
+    name: Package and Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Validate skill structure
+        run: |
+          if [ ! -f "skills/skillsmp-searcher/SKILL.md" ]; then
+            echo "Error: SKILL.md not found"
+            exit 1
+          fi
+          if [ ! -d "skills/skillsmp-searcher/scripts" ]; then
+            echo "Error: scripts directory not found"
+            exit 1
+          fi
+          echo "Skill structure validation passed"
+
+      - name: Package skill
+        run: |
+          cd skills/skillsmp-searcher
+          zip -r ../../skillsmp-searcher.skill . -x "*.git*" "*.pyc" "__pycache__/*"
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          echo "## 🚀 Automated Release" > release_notes.md
+          echo "" >> release_notes.md
+          echo "This is an automated release from the main branch." >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Changes" >> release_notes.md
+          echo "- Latest changes from the main branch" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Installation" >> release_notes.md
+          echo '```bash' >> release_notes.md
+          echo "claude skill install skillsmp-searcher.skill" >> release_notes.md
+          echo '```' >> release_notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Latest Release
+          body_path: release_notes.md
+          files: skillsmp-searcher.skill
+          tag_name: latest
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
