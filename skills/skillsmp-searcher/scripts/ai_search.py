@@ -11,25 +11,49 @@ import sys
 import os
 
 # API Configuration
-BASE_URL = "https://skillsmp.com/api/v1"
+BASE_URL = os.getenv("SKILLSMP_API_BASE_URL", "https://skillsmp.com/api/v1")
 API_KEY_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "references", "api_key.txt")
+API_KEY_REAL_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "references", "api_key_real.txt")
 
 
 def load_api_key():
-    """Load API key from references/api_key.txt"""
+    """
+    Load API key from multiple sources (priority order):
+    1. Environment variable SKILLSMP_API_KEY
+    2. File references/api_key_real.txt (for development, gitignored)
+    3. File references/api_key.txt (template file)
+    """
+    # Try environment variable first (most secure)
+    env_key = os.getenv("SKILLSMP_API_KEY")
+    if env_key:
+        return env_key
+
+    # Try api_key_real.txt (for development)
+    try:
+        with open(API_KEY_REAL_FILE, 'r') as f:
+            api_key = f.read().strip()
+            if api_key and not api_key.startswith("#"):
+                return api_key
+    except FileNotFoundError:
+        pass
+
+    # Try api_key.txt (template file)
     try:
         with open(API_KEY_FILE, 'r') as f:
             api_key = f.read().strip()
-            if not api_key:
-                raise ValueError("API key file is empty")
-            return api_key
+            if api_key and not api_key.startswith("#") and "your_api_key_here" not in api_key:
+                return api_key
     except FileNotFoundError:
-        print(f"Error: API key file not found at {API_KEY_FILE}")
-        print("Please create the file and add your SkillsMP API key.")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error loading API key: {e}")
-        sys.exit(1)
+        pass
+
+    # No valid API key found
+    print("Error: No valid API key found.")
+    print("\nPlease configure your API key using one of these methods:")
+    print("1. Set environment variable SKILLSMP_API_KEY (recommended)")
+    print("2. Create file: references/api_key_real.txt")
+    print("3. Edit file: references/api_key.txt")
+    print("\nSee API_KEY_GUIDE.md for detailed instructions.")
+    sys.exit(1)
 
 
 def ai_search(query, api_key=None):
