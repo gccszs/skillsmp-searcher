@@ -13,12 +13,14 @@
 - **Cross-Platform**: Works on Windows, macOS, and Linux
 - **Python 3.9+**: Supports Python 3.9, 3.10, 3.11, and 3.12
 - **Secure API Key Management**: Multiple configuration methods with security best practices
+- **One-Click Installation**: Install skills directly from search results
+- **Update Checker**: Automatically check for updates to installed skills
 
 ## Installation
 
 Choose one of the following methods to install SkillsMP Searcher:
 
-### Method 1: NPX Quick Install �?(Recommended)
+### Method 1: NPX Quick Install (Recommended)
 
 The fastest way to install directly from GitHub:
 
@@ -70,11 +72,11 @@ You should see `skillsmp-searcher` in the list of installed skills.
 
 ## Configuration
 
-### 🔑 API Key Setup
+### API Key Setup
 
 Before using this skill, you need to configure your SkillsMP API key. Choose one of the following methods:
 
-**Method 1: Environment Variable (Recommended) �?*
+**Method 1: Environment Variable (Recommended)**
 
 ```bash
 # Linux/macOS - Add to ~/.bashrc or ~/.zshrc
@@ -98,14 +100,14 @@ sk_live_skillsmp_your_actual_key_here
 python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --api-key "your_key_here"
 ```
 
-### ⚠️ Security Best Practices
+### Security Best Practices
 
 - **Never commit API keys** to version control
 - **Use environment variables** for production deployments
 - **Rotate compromised keys** immediately at [SkillsMP Dashboard](https://skillsmp.com/)
 - **Monitor API usage** for unusual activity
 
-> 💡 **Tip**: Copy `.env.example` to `.env` and fill in your API key for local development. The `.env` file is automatically gitignored.
+> **Tip**: Copy `.env.example` to `.env` and fill in your API key for local development. The `.env` file is automatically gitignored.
 
 ## Usage
 
@@ -131,7 +133,7 @@ Search using natural language:
 python skills/skillsmp-searcher/scripts/ai_search.py "How to create a web scraper"
 ```
 
-### One-Click Skill Installation 🔧
+### One-Click Skill Installation
 
 Install skills directly from search results:
 
@@ -155,7 +157,7 @@ python skills/skillsmp-searcher/scripts/install_skill.py list
 - `--page N`: Search page number (default: 1)
 - `--sort`: Sort by `stars` (default) or `recent`
 
-### View Skill Details ℹ️
+### View Skill Details
 
 Get detailed information about a specific skill:
 
@@ -171,7 +173,7 @@ python skills/skillsmp-searcher/scripts/skill_info.py "skill-name"
 - Installation commands
 - Usage examples
 
-### Check for Updates 🔄
+### Check for Updates
 
 Check all installed skills for available updates:
 
@@ -230,13 +232,13 @@ mypy scripts/
 ```
 skillsmp-searcher/
 ├── .github/
-�?  └── workflows/          # CI/CD workflows
+│   └── workflows/          # CI/CD workflows
 ├── skills/
-�?  └── skillsmp-searcher/  # Skill package
-�?      ├── SKILL.md        # Skill metadata
-�?      ├── scripts/        # Executable scripts
-�?      ├── references/     # Documentation and configs
-�?      └── assets/         # Resource files
+│   └── skillsmp-searcher/  # Skill package
+│       ├── SKILL.md        # Skill metadata
+│       ├── scripts/        # Executable scripts
+│       ├── references/     # Documentation and configs
+│       └── assets/         # Resource files
 ├── tests/                  # Test suite
 ├── requirements.txt        # Python dependencies
 └── README.md              # This file
