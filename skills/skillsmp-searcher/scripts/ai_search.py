@@ -52,7 +52,7 @@ def load_api_key():
     print("1. Set environment variable SKILLSMP_API_KEY (recommended)")
     print("2. Create file: references/api_key_real.txt")
     print("3. Edit file: references/api_key.txt")
-    print("\nSee API_KEY_GUIDE.md for detailed instructions.")
+    print("\nSee README.md for detailed instructions.")
     sys.exit(1)
 
 

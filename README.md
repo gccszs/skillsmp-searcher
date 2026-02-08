@@ -27,11 +27,39 @@
 
 ### Configuration
 
-Before using this skill, you need to configure your SkillsMP API key:
+#### 🔑 API Key Setup
 
-1. Get your API key from [SkillsMP Dashboard](https://skillsmp.com/)
-2. Edit `skills/skillsmp-searcher/references/api_key.txt`
-3. Replace the placeholder with your actual API key
+Before using this skill, you need to configure your SkillsMP API key. Choose one of the following methods:
+
+**Method 1: Environment Variable (Recommended) ✅**
+```bash
+# Linux/macOS - Add to ~/.bashrc or ~/.zshrc
+export SKILLSMP_API_KEY="sk_live_skillsmp_your_actual_key_here"
+
+# Windows PowerShell
+[System.Environment]::SetEnvironmentVariable('SKILLSMP_API_KEY', 'sk_live_skillsmp_your_actual_key_here', 'User')
+```
+
+**Method 2: Configuration File (For Development)**
+```bash
+# Create file: skills/skillsmp-searcher/references/api_key_real.txt
+# Paste your API key (only the key, nothing else)
+sk_live_skillsmp_your_actual_key_here
+```
+
+**Method 3: Command-Line Argument (One-Time Use)**
+```bash
+python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --api-key "your_key_here"
+```
+
+#### ⚠️ Security Best Practices
+
+- **Never commit API keys** to version control
+- **Use environment variables** for production deployments
+- **Rotate compromised keys** immediately at [SkillsMP Dashboard](https://skillsmp.com/)
+- **Monitor API usage** for unusual activity
+
+> 💡 **Tip**: Copy `.env.example` to `.env` and fill in your API key for local development. The `.env` file is automatically gitignored.
 
 ### Usage
 
@@ -124,11 +152,39 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### 配置
 
-使用此技能前，需要配置您的SkillsMP API密钥：
+#### 🔑 API密钥设置
 
-1. 从[SkillsMP控制台](https://skillsmp.com/)获取您的API密钥
-2. 编辑 `skills/skillsmp-searcher/references/api_key.txt`
-3. 将占位符替换为您的实际API密钥
+使用此技能前，需要配置您的SkillsMP API密钥。选择以下任一方法：
+
+**方法1：环境变量（推荐）✅**
+```bash
+# Linux/macOS - 添加到 ~/.bashrc 或 ~/.zshrc
+export SKILLSMP_API_KEY="sk_live_skillsmp_您的实际密钥"
+
+# Windows PowerShell
+[System.Environment]::SetEnvironmentVariable('SKILLSMP_API_KEY', 'sk_live_skillsmp_您的实际密钥', 'User')
+```
+
+**方法2：配置文件（用于开发）**
+```bash
+# 创建文件：skills/skillsmp-searcher/references/api_key_real.txt
+# 粘贴您的API密钥（仅密钥本身，不要有其他内容）
+sk_live_skillsmp_您的实际密钥
+```
+
+**方法3：命令行参数（一次性使用）**
+```bash
+python skills/skillsmp-searcher/scripts/search_skills.py "SEO" --api-key "您的密钥"
+```
+
+#### ⚠️ 安全最佳实践
+
+- **永远不要将API密钥提交**到版本控制系统
+- **使用环境变量**进行生产部署
+- **密钥泄露后立即轮换**，访问[SkillsMP控制台](https://skillsmp.com/)
+- **监控API使用情况**，发现异常活动
+
+> 💡 **提示**：将 `.env.example` 复制为 `.env` 并填入您的API密钥用于本地开发。`.env` 文件会自动被git忽略。
 
 ### 使用方法
 
