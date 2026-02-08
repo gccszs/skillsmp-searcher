@@ -250,10 +250,69 @@ def format_update_summary(result: Dict):
     print(f"Errors: {len(errors)}")
 
 
+def interactive_details_loop(result: Dict, api_key: Optional[str] = None):
+    """
+    Interactive loop for viewing skill details.
+
+    Args:
+        result: Update check result from check_skill_updates()
+        api_key: API key for API requests
+    """
+    updates = result["updates"]
+
+    if not updates:
+        return
+
+    while True:
+        print("\n" + "=" * 60)
+        print(
+            "View details? Enter skill number (1-{}) or 'q' to quit:".format(len(updates)), end=" "
+        )
+
+        try:
+            user_input = input().strip()
+
+            if user_input.lower() == "q":
+                print("👋 Exiting update checker.")
+                break
+
+            skill_index = int(user_input)
+            if skill_index < 1 or skill_index > len(updates):
+                print(f"❌ Invalid number. Please enter 1-{len(updates)} or 'q'")
+                continue
+
+            # Get selected update
+            selected = updates[skill_index - 1]
+            skill_name = selected["name"]
+
+            # Import skill_diff to show details
+            import subprocess
+
+            print(f"\n🔍 Fetching details for {skill_name}...")
+            result = subprocess.run(
+                ["python", "skill_diff.py", skill_name],
+                cwd=Path(__file__).parent,
+                capture_output=False,
+            )
+
+        except ValueError:
+            print("❌ Invalid input. Please enter a number or 'q'")
+        except KeyboardInterrupt:
+            print("\n👋 Exiting update checker.")
+            break
+        except Exception as e:
+            print(f"❌ Error: {e}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Check SkillsMP skills for available updates")
     parser.add_argument("--json", action="store_true", help="Output results in JSON format")
     parser.add_argument("--api-key", help="API key (overrides file)")
+    parser.add_argument(
+        "--no-interactive",
+        action="store_true",
+        help="Disable interactive mode (exit after showing summary)",
+    )
 
     args = parser.parse_args()
 
@@ -274,6 +333,10 @@ def main():
             print(json.dumps(json_result, indent=2))
         else:
             format_update_summary(result)
+
+            # Interactive mode (only if updates found, not disabled, and in TTY)
+            if result["updates"] and not args.no_interactive and sys.stdin.isatty():
+                interactive_details_loop(result, api_key=args.api_key)
 
     except SkillsMPError as e:
         print(f"❌ Error: {e}", file=sys.stderr)
